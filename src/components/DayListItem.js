@@ -6,7 +6,7 @@ import classNames from "classnames";
 const DayListItem = (props) => {
   const { name, spots, selected, setDay } = props;
 
-  const appoint = () => {
+  const onClick = () => {
     setDay(name);
   };
 
@@ -28,7 +28,7 @@ const DayListItem = (props) => {
   });
 
   return (
-    <li className={itemClasses} onClick={appoint}>
+    <li className={itemClasses} onClick={onClick}>
       <h2 className="text--regular">{name}</h2>
       <h3 className="text--light">{formatSpots()}</h3>
     </li>
