@@ -1,6 +1,6 @@
 import React from "react";
 
-import "components/DayListItem.scss"
+import "components/styles/DayListItem.scss"
 import classNames from "classnames";
 
 const DayListItem = (props) => {
