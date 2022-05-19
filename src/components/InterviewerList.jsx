@@ -3,15 +3,15 @@ import InterviewerListItem from './InterviewerListItem';
 import "./styles/InterviewerList.scss"
 
 const InterviewerList = (props) => {
-  const { interviewer, interviewers, setInterviewer } = props;
+  const { value, interviewers, onChange } = props;
 
   const formatInterviewers = () => {
     return interviewers.map(thisInterviewer => {
       return <InterviewerListItem
         key={thisInterviewer.id}
         {...thisInterviewer}
-        selected={thisInterviewer.id === interviewer}
-        setInterviewer={() => setInterviewer && setInterviewer(thisInterviewer.id)}
+        selected={thisInterviewer.id === value}
+        setInterviewer={() => onChange(thisInterviewer.id)}
       />
     });
   }
