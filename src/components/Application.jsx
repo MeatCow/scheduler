@@ -5,7 +5,7 @@ import "components/styles/Application.scss";
 import useApp from "hooks/useApp";
 
 export default function Application() {
-  const { createSchedule, genDayList } = useApp();
+  const { genSchedule, genDayList } = useApp();
 
   return (
     <main className="layout">
@@ -26,7 +26,7 @@ export default function Application() {
         />
       </section>
       <section className="schedule">
-        {createSchedule()}
+        {genSchedule()}
       </section>
     </main>
   );

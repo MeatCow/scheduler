@@ -25,7 +25,6 @@ function useApp() {
   const bookInterview = (appointmentId, interview) => {
     return pushAppointmentUpdate(appointmentId, interview)
       .then(res => {
-        console.log(res);
         const appointment = {
           ...state.appointments[appointmentId],
           interview: { ...interview }
@@ -52,7 +51,21 @@ function useApp() {
       }} />;
   }
 
-  const createSchedule = () => {
+  const cancelInterview = (id) => {
+    return axios.delete(`/api/appointments/${id}`)
+      .then(res => {
+        const appointments = { ...state.appointments }
+        appointments[id].interview = null;
+        setState(prev => {
+          return {
+            ...prev,
+            ...appointments
+          }
+        });
+      });
+  }
+
+  const genSchedule = () => {
     return dailyAppointments.map(appointment => {
       const interview = getInterview(state, appointment.interview);
       return <Appointment
@@ -61,7 +74,8 @@ function useApp() {
           appointment,
           interview,
           interviewers: getInterviewersForDay(state, state.day),
-          bookInterview
+          bookInterview,
+          cancelInterview
         }} />;
     });
   }
@@ -76,7 +90,7 @@ function useApp() {
     })
   }, [])
 
-  return { createSchedule, genDayList }
+  return { genSchedule, genDayList }
 }
 
 export default useApp
