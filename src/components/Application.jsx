@@ -27,16 +27,20 @@ export default function Application(props) {
     })
   }, [])
 
-  const schedule = dailyAppointments.map(appointment => {
-    const interview = getInterview(state, appointment.interview);
-    return <Appointment
-      key={appointment.id}
-      {...{
-        ...appointment,
-        interview,
-        interviewers: getInterviewersForDay(state, state.day)
-      }} />
-  })
+  const createSchedule = () => {
+    return dailyAppointments.map(appointment => {
+      const interview = getInterview(state, appointment.interview);
+      return <Appointment
+        key={appointment.id}
+        {...{
+          ...appointment,
+          interview,
+          interviewers: getInterviewersForDay(state, state.day)
+        }} />;
+    });
+  }
+
+  const schedule = createSchedule()
 
   return (
     <main className="layout">
@@ -49,7 +53,11 @@ export default function Application(props) {
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
           <DayList
-            {...{ days: state.days, value: state.day, onChange: setDay }}
+            {...{
+              days: state.days,
+              value: state.day,
+              onChange: setDay
+            }}
           />
         </nav>
         <img
@@ -63,4 +71,6 @@ export default function Application(props) {
       </section>
     </main>
   );
+
+
 }
