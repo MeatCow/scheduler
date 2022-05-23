@@ -17,22 +17,30 @@ function useApp() {
     setState(prev => ({ ...prev, day }))
   };
 
-  const bookInterview = (appointmentId, interview) => {
-    const appointment = {
-      ...state.appointments[appointmentId],
-      interview: { ...interview }
-    }
-    const appointments = {
-      ...state.appointments,
-      [appointmentId]: appointment
-    }
-    setState(prev => {
-      return {
-        ...prev,
-        appointments
-      }
-    })
+  const pushAppointmentUpdate = (appointmentId, interview) => {
+    return axios.put(`/api/appointments/${appointmentId}`, { interview })
+      .catch(err => console.log(err));
+  }
 
+  const bookInterview = (appointmentId, interview) => {
+    return pushAppointmentUpdate(appointmentId, interview)
+      .then(res => {
+        console.log(res);
+        const appointment = {
+          ...state.appointments[appointmentId],
+          interview: { ...interview }
+        }
+        const appointments = {
+          ...state.appointments,
+          [appointmentId]: appointment
+        }
+        setState(prev => {
+          return {
+            ...prev,
+            appointments
+          }
+        })
+      });
   }
 
   const genDayList = () => {
@@ -68,7 +76,7 @@ function useApp() {
     })
   }, [])
 
-  return { createSchedule, genDayList}
+  return { createSchedule, genDayList }
 }
 
 export default useApp
