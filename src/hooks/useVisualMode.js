@@ -4,6 +4,11 @@ const useVisualMode = (initial) => {
   const [mode, setMode] = useState(initial)
   const [history, setHistory] = useState([initial])
 
+  /**
+   * Pushes a new Mode to the state stack
+   * @param {*} newMode 
+   * @param {boolean} replace Replace the top item instead of adding to stack
+   */
   const transition = (newMode, replace = false) => {
     setMode(newMode);
     if (replace) {
@@ -12,6 +17,9 @@ const useVisualMode = (initial) => {
     setHistory(prev => [...prev, newMode]);
   }
 
+  /**
+   * Sets the mode to the previous mode 
+   */
   const back = () => {
     if (history.length === 1) {
       return;
