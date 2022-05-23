@@ -1,66 +1,11 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 
 import "components/styles/Application.scss";
 
-import DayList from "./DayList";
-import Appointment from "./Appointment";
-import { getAppointmentsForDay, getInterviewersForDay, getInterview } from "helpers/selectors";
+import useApp from "hooks/useApp";
 
-export default function Application(props) {
-  const [state, setState] = useState({
-    day: "Monday",
-    days: [],
-    appointments: {},
-    interviewers: {}
-  })
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
-
-  const setDay = day => {
-    setState(prev => ({ ...prev, day }))
-  };
-  
-  const bookInterview = (appointmentId, interview) => {
-    const appointment = {
-      ...state.appointments[appointmentId],
-      interview: {...interview}
-    }
-    const appointments = {
-      ...state.appointments,
-      [appointmentId]: appointment
-    }
-    setState(prev => {
-      return {
-        ...prev,
-        appointments
-      }
-    })
-    
-  }
-
-  const createSchedule = () => {
-    return dailyAppointments.map(appointment => {
-      const interview = getInterview(state, appointment.interview);
-      return <Appointment
-        key={appointment.id}
-        {...{
-          appointment,
-          interview,
-          interviewers: getInterviewersForDay(state, state.day),
-          bookInterview
-        }} />;
-    });
-  }
-
-  useEffect(() => {
-    Promise.all([
-      axios.get("/api/days"),
-      axios.get("/api/appointments"),
-      axios.get("/api/interviewers")
-    ]).then(all => {
-      setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
-    })
-  }, [])
+export default function Application() {
+  const { createSchedule, genDayList } = useApp();
 
   return (
     <main className="layout">
@@ -72,13 +17,7 @@ export default function Application(props) {
         />
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
-          <DayList
-            {...{
-              days: state.days,
-              value: state.day,
-              onChange: setDay
-            }}
-          />
+          {genDayList()}
         </nav>
         <img
           className="sidebar__lhl sidebar--centered"
@@ -91,6 +30,4 @@ export default function Application(props) {
       </section>
     </main>
   );
-
-
 }
