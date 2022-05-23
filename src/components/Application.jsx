@@ -19,6 +19,24 @@ export default function Application(props) {
   const setDay = day => {
     setState(prev => ({ ...prev, day }))
   };
+  
+  const bookInterview = (appointmentId, interview) => {
+    const appointment = {
+      ...state.appointments[appointmentId],
+      interview: {...interview}
+    }
+    const appointments = {
+      ...state.appointments,
+      [appointmentId]: appointment
+    }
+    setState(prev => {
+      return {
+        ...prev,
+        appointments
+      }
+    })
+    
+  }
 
   const createSchedule = () => {
     return dailyAppointments.map(appointment => {
@@ -26,9 +44,10 @@ export default function Application(props) {
       return <Appointment
         key={appointment.id}
         {...{
-          ...appointment,
+          appointment,
           interview,
-          interviewers: getInterviewersForDay(state, state.day)
+          interviewers: getInterviewersForDay(state, state.day),
+          bookInterview
         }} />;
     });
   }
