@@ -1,13 +1,17 @@
-export const getAppointmentsForDay = (state, selectedDay) => {
-  const theDay = state.days.find(date => date.name === selectedDay);
-  if (!theDay) {
-    return [];
-  }
-  return theDay.appointments.map(appt => state.appointments[appt]);
+const getDay = (state, day) => {
+  return state.days.find(thisDay => thisDay.name === day);
 }
 
-export const getInterviewersForDay = (state, selectedDay) => {
-  const today = state.days.find(day => day.name === selectedDay);
+export const getAppointmentsForDay = (state, day) => {
+  const today = getDay(state, day);
+  if (!today) {
+    return [];
+  }
+  return today.appointments.map(appt => state.appointments[appt]);
+}
+
+export const getInterviewersForDay = (state, day) => {
+  const today = getDay(state, day);
   if (!today) {
     return [];
   }
@@ -23,7 +27,26 @@ export const getInterview = (state, interview) => {
   return { ...interview, interviewer: state.interviewers[interview.interviewer] }
 }
 
-export const countSpots = (days) => {
-  console.log(days);
-  return days.filter(day => day.interview === null).length;
+export const countSpots = (appointments) => {
+  return appointments.filter(day => day.interview === null).length;
+}
+
+export const updateSpots = (state) => {
+  const appointments = getAppointmentsForDay(state, state.day);
+  const spotsRemaining = countSpots(appointments);
+  const today = getDay(state, state.day);
+
+  if (!today) {
+    return state;
+  }
+
+  const newState = { ...state }
+  const newDays = [...state.days]
+  const newDay = { ...today, spots: spotsRemaining }
+  
+  const dayIndex = state.days.findIndex(thisDay => thisDay.name === state.day);
+  newDays[dayIndex] = newDay;
+  newState.days = newDays;
+
+  return newState;
 }

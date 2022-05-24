@@ -1,4 +1,4 @@
-import { getAppointmentsForDay, getInterview, getInterviewersForDay, countSpots } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay, countSpots, updateSpots } from "helpers/selectors";
 
 const state = {
   days: [
@@ -12,6 +12,18 @@ const state = {
       id: 2,
       name: "Tuesday",
       appointments: [4, 5],
+      interviewers: [2, 3, 5, 10]
+    },
+    {
+      id: 3,
+      name: "Wednesday",
+      appointments: [],
+      interviewers: [2, 3, 5, 10]
+    },
+    {
+      id: 4,
+      name: "Thursday",
+      appointments: [3, 5],
       interviewers: [2, 3, 5, 10]
     }
   ],
@@ -66,7 +78,7 @@ test("getAppointmentsForDay returns an empty array when the days data is empty",
 });
 
 test("getAppointmentsForDay returns an empty array when the day is not found", () => {
-  const result = getAppointmentsForDay(state, "Wednesday");
+  const result = getAppointmentsForDay(state, "Saturday");
   expect(result.length).toEqual(0);
 });
 
@@ -91,7 +103,7 @@ test("getInterviewersForDay returns an empty array when the days data is empty",
 });
 
 test("getInterviewersForDay returns an empty array when the day is not found", () => {
-  const result = getInterviewersForDay(state, "Wednesday");
+  const result = getInterviewersForDay(state, "Saturday");
   expect(result.length).toEqual(0);
 });
 
@@ -129,4 +141,26 @@ test("countSpots to return 1 when 1 interviews are null", () => {
 test("countSpots to return 0 when data is empty", () => {
   const result = countSpots([{}]);
   expect(result).toEqual(0);
+});
+
+test("updateSpots to return a new state with the spots to 2 when 2 spots remain", () => {
+  const newState = updateSpots({ ...state, day: "Monday" });
+  const monday = newState.days[0];
+  console.log(newState);
+  expect(monday.spots).toEqual(2);
+});
+
+test("updateSpots to return a new state with the spots to 0 when appointments are empty", () => {
+  const wednesday = updateSpots({ ...state, day: "Wednesday" }).days[2];
+  expect(wednesday.spots).toEqual(0);
+});
+
+test("updateSpots to return a new state with the spots to 0 when no spots remain", () => {
+  const thursday = updateSpots({ ...state, day: "Thursday" }).days[3];
+  expect(thursday.spots).toEqual(0);
+});
+
+test("updateSpots to return a new state with the days unmodified, if days are empty", () => {
+  const thursday = updateSpots({ days: [], day: "Monday" }).days;
+  expect(thursday.length).toEqual(0);
 });
