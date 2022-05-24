@@ -19,7 +19,6 @@ function useApp() {
 
   const pushAppointmentUpdate = (appointmentId, interview) => {
     return axios.put(`/api/appointments/${appointmentId}`, { interview })
-      .catch(err => console.log(err));
   }
 
   const bookInterview = (appointmentId, interview) => {
