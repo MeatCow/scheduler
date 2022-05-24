@@ -1,16 +1,18 @@
-import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay, countSpots } from "helpers/selectors";
 
 const state = {
   days: [
     {
       id: 1,
       name: "Monday",
-      appointments: [1, 2, 3]
+      appointments: [1, 2, 3],
+      interviewers: [2, 3, 4, 5, 10]
     },
     {
       id: 2,
       name: "Tuesday",
-      appointments: [4, 5]
+      appointments: [4, 5],
+      interviewers: [2, 3, 5, 10]
     }
   ],
   appointments: {
@@ -75,7 +77,7 @@ test("getInterviewersForDay returns an array", () => {
 
 test("getInterviewersForDay returns an array with a length matching the number of interviewers for that day", () => {
   const result = getInterviewersForDay(state, "Monday");
-  expect(result.length).toEqual(1);
+  expect(result.length).toEqual(5);
 });
 
 test("getInterviewersForDay returns an array containing the correct interview objects", () => {
@@ -110,4 +112,21 @@ test("getInterview returns an object with the interviewer data", () => {
 test("getInterview returns null if no interview is booked", () => {
   const result = getInterview(state, state.appointments["2"].interview);
   expect(result).toBeNull();
+});
+
+test("countSpots to return 2 when 2 interviews are null", () => {
+  const input = getAppointmentsForDay(state, "Monday");
+  const result = countSpots(input);
+  expect(result).toEqual(2);
+});
+
+test("countSpots to return 1 when 1 interviews are null", () => {
+  const input = getAppointmentsForDay(state, "Tuesday");
+  const result = countSpots(input);
+  expect(result).toEqual(1);
+});
+
+test("countSpots to return 0 when data is empty", () => {
+  const result = countSpots([{}]);
+  expect(result).toEqual(0);
 });

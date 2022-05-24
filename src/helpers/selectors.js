@@ -8,6 +8,9 @@ export const getAppointmentsForDay = (state, selectedDay) => {
 
 export const getInterviewersForDay = (state, selectedDay) => {
   const today = state.days.find(day => day.name === selectedDay);
+  if (!today) {
+    return [];
+  }
   const interviewerIds = today.interviewers;
   return interviewerIds.map(id => state.interviewers[id]);
 }
@@ -18,4 +21,9 @@ export const getInterview = (state, interview) => {
   }
 
   return { ...interview, interviewer: state.interviewers[interview.interviewer] }
+}
+
+export const countSpots = (days) => {
+  console.log(days);
+  return days.filter(day => day.interview === null).length;
 }
