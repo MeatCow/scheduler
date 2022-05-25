@@ -100,8 +100,7 @@ $appointment-height: 11rem;
     }
   }
 
-  &:last-of-type &__add,
-  &:last-of-type &__card {
+  &:last-of-type &__add {
     display: none;
   }
 
