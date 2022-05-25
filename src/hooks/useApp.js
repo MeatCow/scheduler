@@ -1,4 +1,4 @@
-import { getAppointmentsForDay, getInterview, getInterviewersForDay } from 'helpers/selectors';
+import { getAppointmentsForDay, getInterview, getInterviewersForDay, updateSpots } from 'helpers/selectors';
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import Appointment from 'components/Appointment';
@@ -54,11 +54,13 @@ function useApp() {
     return axios.delete(`/api/appointments/${id}`)
       .then(res => {
         const appointments = { ...state.appointments }
-        appointments[id].interview = null;
+        const appointment = { ...appointments[id] }
+        appointment.interview = null;
+        appointments[id] = appointment
         setState(prev => {
           return {
             ...prev,
-            ...appointments
+            appointments
           }
         });
       });
@@ -88,6 +90,10 @@ function useApp() {
       setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
     })
   }, [])
+
+  useEffect(() => {
+    setState(prev => updateSpots(prev));
+  }, [state.appointments]);
 
   return { genSchedule, genDayList }
 }

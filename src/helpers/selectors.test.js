@@ -146,7 +146,6 @@ test("countSpots to return 0 when data is empty", () => {
 test("updateSpots to return a new state with the spots to 2 when 2 spots remain", () => {
   const newState = updateSpots({ ...state, day: "Monday" });
   const monday = newState.days[0];
-  console.log(newState);
   expect(monday.spots).toEqual(2);
 });
 
