@@ -40,7 +40,7 @@ it("renders a clickable button", () => {
 
   fireEvent.click(button);
 
-  expect(handleClick).toHaveBeenCalledTimes(1);
+  expect(handleClick).toHaveBeenCalledTimes(5);
 });
 
 it("renders a disabled button", () => {
